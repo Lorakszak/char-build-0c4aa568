@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet">
+<meta name="referrer" content="no-referrer">
+<title>Karol Roszak - Generative AI Engineer - AI character & content pipelines</title>
+<meta name="description" content="A 3-day proof-of-work: a full AI-native character generation stack, built end to end.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="styles.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%23150f12'/><text x='16' y='22' font-size='16' fill='%23ff5d8f' text-anchor='middle' font-family='monospace' font-weight='bold'>K</text></svg>">
+</head>
+<body>
+
+<nav id="nav">
+  <div class="nav-inner">
+    <a class="brand" href="#top">Karol Roszak<small>Generative AI Engineer</small></a>
+    <div class="nav-links" id="navlinks">
+      <a href="#disclaimer">Disclaimer</a>
+      <a href="#pipeline">Pipeline</a>
+      <a href="#gallery">Gallery</a>
+      <a href="#video">Video</a>
+      <a href="#tooling">Tooling</a>
+      <a href="#track">Track record</a>
+      <a class="nav-cta" href="#contact">Contact</a>
+    </div>
+    <button class="nav-toggle" id="navToggle" aria-label="menu">&#9776;</button>
+  </div>
+</nav>
+
+<header class="hero" id="top">
+  <div class="hero-bg"></div><div class="hero-grid"></div>
+  <div class="wrap">
+    <div class="eyebrow">Generative AI &middot; AI character &amp; content engineering</div>
+    <h1>
+      <span class="q">An AI-native character pipeline, built end to end.</span>
+      One weekend.<br>One character, from nothing.
+    </h1>
+    <p class="sub">One weekend, one character built from nothing: reference generation, photoreal editing,
+      identity-preserving and automation-friendly (via ComfyUI APIs + LLM/agentic prompting) face
+      restoration across edits, and video for producing this demo. A working pipeline and the artifacts
+      it produced, attached.</p>
+    <div class="hero-cta">
+      <a class="btn btn-primary" href="#gallery">See the work &rarr;</a>
+      <a class="btn btn-ghost" href="#pipeline">How the pipeline works</a>
+    </div>
+    <div class="hero-meta">
+      <div><b>3 days</b><span>weekend build, from zero</span></div>
+      <div><b>5+ yrs</b><span>AI in production</span></div>
+      <div><b>1500+</b><span>artifacts generated for this project</span></div>
+    </div>
+  </div>
+</header>
+
+<section id="disclaimer">
+  <div class="wrap">
+    <div class="eyebrow reveal">Read this first</div>
+    <h2 class="reveal">A few honest caveats.</h2>
+    <p class="lead reveal">Context for how to read everything below. None of it changes the engineering;
+      it changes what you should and should not expect from a 3-day unpaid build.</p>
+    <ol class="disc reveal">
+      <li><b>Built on the newest possible stack, deliberately optimized for cost.</b> In production the
+        image generation here would be proprietary models behind paid API calls. For an unpaid showcase
+        I instead used Higgsfield's free generations plus a small tool I wrote to automate them. The
+        engineering decisions are identical; only the billing model differs.</li>
+      <li><b>The tools change every few months. The reasoning does not.</b> This build exists to show I
+        can deliver regardless of which models are SOTA this quarter. Identity preservation today is
+        SAM3 segmentation + a hi-res reference inpaint; not long ago the same goal meant SDXL/Flux + a
+        LoRA, or IP-Adapter / InstantID / PuLID / FaceID inpaint on the face, a skin detailer to remove
+        plastic skin, then a separate upscaler. Same problem, same logic, different tools. That transfer
+        is the point.</li>
+      <li><b>This is a proof-of-work, not a finished product.</b> It is not perfect and I know exactly
+        where it is rough and how I would harden each step for real production. Taking it there properly
+        takes real time and effort, which I would rather not spend unpaid on a showcase for a role that
+        is still undecided. If you want further proof that I can bring this to genuine production
+        quality, I am glad to, on a paid basis.</li>
+      <li><b>Images and videos are shown compressed, not at native resolution.</b> They are downscaled
+        and re-encoded to keep the page light on free static hosting. Originals were generated at 2K resolution.</li>
+    </ol>
+  </div>
+</section>
+
+<section id="pipeline">
+  <div class="wrap">
+    <div class="eyebrow reveal">The pipeline</div>
+    <h2 class="reveal">Reference in, recognizable character out.</h2>
+    <p class="lead reveal">Multi-model, multi-stage, with a deliberate identity-preservation step in the
+      middle. The hard part is keeping the <em>same person</em> after every edit pass, and although it
+      never will be pixel perfect, it can be good enough.</p>
+
+    <div class="pipe reveal">
+      <div class="pipe-step"><div class="n">01</div><h4>Reference generation</h4><p>Nano Banana Pro (2K, 9:16) on Higgsfield, identity locked to a canonical hero + ground-truth face/body set.</p></div>
+      <div class="pipe-step"><div class="n">02</div><h4>Photoreal edit</h4><p>Qwen Rapid AIO v23, text-driven editing tuned for photorealism: skin texture, framing, scene.</p></div>
+      <div class="pipe-step"><div class="n">03</div><h4>Head segmentation</h4><p>SAM3 in ComfyUI segments the head, 1:1 square crop, geometry written to JSON.</p></div>
+      <div class="pipe-step"><div class="n">04</div><h4>Hi-res face inpaint</h4><p>Crop re-rendered at higher resolution against the original face reference.</p></div>
+      <div class="pipe-step"><div class="n">05</div><h4>Feathered paste-back</h4><p>Edited face downscaled into the recorded region (shrinking kills blur), seam feathered. Identity restored.</p></div>
+      <div class="pipe-step"><div class="n">06</div><h4>Image upscaling</h4><p>SeedVR2 image upscale back to 2K resolution for the final deliverable.</p></div>
+    </div>
+
+    <h3 class="reveal" style="margin-bottom:18px">Drag: raw generation vs final restored character</h3>
+    <div class="ba reveal" id="ba">
+      <img class="before" id="baBefore" alt="raw generation" src="assets/img/native/1.webp">
+      <img class="after"  id="baAfter"  alt="final restored" src="assets/img/final/1.webp">
+      <div class="ba-lbl l">RAW &middot; Nano Banana Pro</div>
+      <div class="ba-lbl r">FINAL &middot; restored</div>
+      <div class="divider" id="baDiv"></div>
+      <div class="knob" id="baKnob">&#8596;</div>
+    </div>
+    <p class="ba-cap reveal">Click the thumbnails to swap the pair. Same character, held constant across the full edit chain.</p>
+    <div class="strip-wrap reveal" id="stripWrap" style="margin-top:26px">
+      <div class="strip" id="strip"></div>
+      <span class="strip-hint" id="stripHint">scroll for more &rarr;</span>
+    </div>
+  </div>
+</section>
+
+<section id="restore">
+  <div class="wrap">
+    <div class="eyebrow reveal">Identity preservation, the part that matters</div>
+    <h2 class="reveal">Primitive face restoration flow.</h2>
+    <p class="lead reveal">Primitive, but it works! I treat identity as a reproducible post-process:
+      segment, crop, restore at high res against the locked reference, then paste back by recorded
+      geometry. stdlib-only Python drives ComfyUI over its HTTP API.</p>
+    <pre class="reveal"><span class="c"># settings.py - one place for every option, CLI flags override</span>
+SAM_PROMPT     = <span class="k">"female head"</span>   <span class="c"># SAM3 segmentation target</span>
+FORCE_SQUARE   = <span class="k">True</span>           <span class="c"># 1:1 crop, best for upscalers</span>
+FEATHER        = <span class="k">24</span>             <span class="c"># seam blend width (px)</span>
+FACE_SUFFIX    = <span class="k">"_face"</span>         <span class="c"># filename is the join key between stages</span>
+
+<span class="c"># stage 1: photo -> output/&lt;key&gt;/&lt;key&gt;_face.png + _coords.json</span>
+<span class="c"># (edit / skin / SeedVR2 upscale happen on the crop here)</span>
+<span class="c"># stage 2: edited face -> downscale into recorded region -> feather -> final/</span>
+$ python3 batch_face_crop.py   <span class="c"># 32 images, sequential, unattended</span>
+$ python3 batch_paste_back.py  <span class="c"># key = filename minus _face</span></pre>
+    <div class="subhead reveal">Restored crops: segmented input &rarr; edited face</div>
+    <div class="rest-grid reveal" id="restorePairs"></div>
+    <p class="lead reveal" style="margin-top:26px">Why downscale the edited face instead of upscale the
+      target: shrinking a high-res render into the slot adds detail and preserves identity (skin, eye
+      color, etc.). That is the reason behind it. Screenshots below.</p>
+    <div class="wf-grid reveal" id="wf"></div>
+  </div>
+</section>
+
+<section id="pose">
+  <div class="wrap">
+    <div class="eyebrow reveal">Same engine, a different lever</div>
+    <h2 class="reveal">Image-to-image pose translation.</h2>
+    <p class="lead reveal">No matter what style the input images are in, we can transfer their pose onto our
+      character, keeping her own body shape and clothes. Input pose &rarr; our character (raw) &rarr; final.
+      Examples below.</p>
+    <div class="pose-flow reveal" id="poseFlow"></div>
+  </div>
+</section>
+
+<section id="gallery">
+  <div class="wrap">
+    <div class="eyebrow reveal">Output</div>
+    <h2 class="reveal">The character, after the full chain.</h2>
+    <p class="lead reveal">Every image below is the same person: generated, edited, face-restored, upscaled.
+      Click to enlarge.</p>
+    <div class="gal" id="gal"></div>
+  </div>
+</section>
+
+<section id="video">
+  <div class="wrap">
+    <div class="eyebrow reveal">Motion</div>
+    <h2 class="reveal">Video generation.</h2>
+    <p class="lead reveal">Character-consistent clips from the same identity: lifestyle, a lip-synced
+      goodnight shot, motion/pose transfer from a reference, and template-driven scenes. Vertical,
+      short-form, the format these products ship in.</p>
+    <p class="lead reveal">In a production setting you most probably have viral templates already
+      collected, with attention-grabbing hooks, and an AI agent collecting and expanding that
+      collection over time so your characters can reuse them. I did not have time to collect and add
+      templates here, and I did not want to reuse another brand's featured templates.</p>
+    <div class="subhead reveal">Lifestyle &amp; scene</div>
+    <div class="vgrid reveal" id="vLife"></div>
+    <div class="subhead reveal">Freya + Car session (Seedance 2 test)</div>
+    <p class="vnote reveal">Reference inputs used for this session:</p>
+    <div class="faces reveal" id="porscheRefs"></div>
+    <div class="vgrid reveal" id="vPorsche"></div>
+    <div class="subhead reveal">Motion / pose transfer: reference &rarr; generated</div>
+    <p class="vnote reveal">I did not have time to add face restoration for the character on these
+      clips. Even so, judging by the result, staying with Seedance 2 yields much better output than
+      motion/pose transfer with Kling or similar models, so anything that drives this would be Seedance
+      2 cost rather than a separate motion-transfer stack.</p>
+    <div class="vgrid reveal" id="vMotion"></div>
+    <div class="subhead reveal">Higgsfield template-driven</div>
+    <div class="vgrid reveal" id="vTpl"></div>
+  </div>
+</section>
+
+<section id="tooling">
+  <div class="wrap">
+    <div class="eyebrow reveal">Tooling &amp; the cost call</div>
+    <h2 class="reveal">To semi-automate generations locally and save money...</h2>
+    <p class="lead reveal">I quickly vibe-coded <b>Higgie</b>, a browser extension for Higgsfield that
+      queues tens of prompts with their relevant reference images and runs them unattended, so this
+      whole project cost nothing in image generation.</p>
+    <div class="grid" style="grid-template-columns:repeat(auto-fill,minmax(280px,1fr))">
+      <div class="card reveal">
+        <h3 class="accent">Higgie: queue saturator</h3>
+        <p style="color:var(--text-muted);font-size:.93rem;margin-top:10px">A browser extension I
+          vibe-coded to keep a Higgsfield unlimited-mode queue full automatically: load a prompt list +
+          reference images, set a count, walk away. Hundreds of prepared prompts generated without a
+          human clicking.</p>
+      </div>
+      <div class="card reveal">
+        <h3 class="accent">The cost decision</h3>
+        <p style="color:var(--text-muted);font-size:.93rem;margin-top:10px">Bulk generation ran on an
+          owned Higgsfield unlimited plan instead of a metered image API. Editing, skin detail, SAM3
+          segmentation, inpaint and SeedVR2 upscale ran on a local ComfyUI GPU. The expensive,
+          repeated step is the one I moved off per-call billing. Same call you make choosing local
+          GPUs vs an aggregator by volume.</p>
+      </div>
+      <div class="card reveal">
+        <h3 class="accent">Prompt architecture</h3>
+        <p style="color:var(--text-muted);font-size:.93rem;margin-top:10px">Not "good prompts." A fixed
+          appearance lock + a reusable realism/imperfection stack appended to every generation +
+          a hero-reference-first method, organized into a per-content-pillar prompt library.</p>
+      </div>
+    </div>
+    <div class="subhead reveal">ComfyUI graphs &amp; batch run</div>
+    <div class="wf-grid reveal" id="wf2"></div>
+  </div>
+</section>
+
+<section id="persona">
+  <div class="wrap">
+    <div class="eyebrow reveal">Ground truth</div>
+    <h2 class="reveal">Ground-truth reference set.</h2>
+    <div class="persona">
+      <div class="persona-card reveal">
+        <img src="assets/img/persona/front_face.webp" alt="Freya Lind reference">
+        <div class="pc-b"><b>Freya Lind</b><br><span>@freya.moves &middot; LA &middot; fitness/wellness</span></div>
+      </div>
+      <div class="reveal">
+        <div class="spec">
+          <dl>
+            <dt>Identity lock</dt><dd>Scandinavian, natural blonde, bright blue eyes, athletic hourglass. Defined, never drifts.</dd>
+            <dt>Realism stack</dt><dd>Smartphone capture cues + imperfection (pores, fine texture) folded into every prompt</dd>
+          </dl>
+        </div>
+        <div class="faces" id="faces"></div>
+        <p style="color:var(--text-dim);font-size:.85rem;margin-top:14px">Ground-truth reference set,
+          although I mostly used front face + body shape + an optional character sheet to lock the face,
+          body, and clothes.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="track">
+  <div class="wrap">
+    <div class="eyebrow reveal">Not my first portfolio of characters</div>
+    <h2 class="reveal">The production track record behind the weekend.</h2>
+    <p class="lead reveal">The build shows speed and judgement. These show I have already done this at the
+      scale you are scaling toward.</p>
+    <div class="tr-grid">
+      <div class="card tr reveal"><h3>takara.ai</h3><div class="role">Generative AI Engineer &middot; 2025</div><p>&gt;99% identity &amp; style consistency at production scale. Trained hundreds of LoRAs. ComfyUI editing/identity pipelines cut asset turnaround from days to hours. Extended image to video.</p></div>
+      <div class="card tr reveal"><h3>Stealth AI startup (US)</h3><div class="role">Founding Lead AI &middot; 2025</div><p>GCP infra training &amp; serving LoRAs across a multi-thousand-SKU catalog. POC in 2 weeks, MVP in 8. Led 5 engineers. Autonomous ad-asset generation replacing manual design at scale.</p></div>
+      <div class="card tr reveal"><h3>indaHash</h3><div class="role">Generative AI Engineer &middot; 2023-24</div><p>Directed an international AI-influencer program: ~1,000+ image &amp; video assets per month across multiple personas at production quality. SDXL + LoRA + ControlNet pipelines.</p></div>
+      <div class="card tr reveal"><h3>LABHOUSE</h3><div class="role">Generative AI Engineer &middot; 2024-25</div><p>Consumer face-generation app: Replicate serving stack, tens of thousands of generations/day at 99.9% uptime. Cut pipeline time 25%+. Flux/SDXL identity, try-on, lip-sync.</p></div>
+    </div>
+    <div class="subhead reveal">Older public work, same problem space</div>
+    <div class="links-row reveal">
+      <a class="link-pill" href="https://civitai.red/user/Lorakszak" target="_blank" rel="noopener"><b>Civitai</b><span>WAN2.2 LoRA + shared workflows</span></a>
+      <a class="link-pill" href="https://drive.google.com/drive/u/0/folders/1d7hiyd0rEAWHNBJOwgtBDqmGfEUG3tce" target="_blank" rel="noopener"><b>Drive archive</b><span>SD1.5 / SDXL era work (3 yrs back)</span></a>
+      <a class="link-pill" href="https://github.com/Lorakszak/avatar_project" target="_blank" rel="noopener"><b>avatar_project</b><span>InstantID + IP-Adapter-FaceID-SDXL</span></a>
+      <a class="link-pill" href="https://github.com/Lorakszak/simplegen" target="_blank" rel="noopener"><b>SimpleGen</b><span>older generation project</span></a>
+      <a class="link-pill" href="https://drive.google.com/file/d/1Ym4r_o_7qMdiKr-67WaKB3P7su__fIVr/view?usp=drive_link" target="_blank" rel="noopener"><b>Ad stills report</b><span>marketing product-ad generation</span></a>
+      <a class="link-pill" href="https://drive.google.com/file/d/11Njc3kx6M6X8t8DKk2kgWnGoKnLr6IVi/view?usp=drive_link" target="_blank" rel="noopener"><b>Portfolio preview</b><span>selected past work</span></a>
+    </div>
+  </div>
+</section>
+
+<section id="contact">
+  <div class="wrap" style="text-align:center">
+    <div class="eyebrow reveal" style="display:inline-block">Let's talk</div>
+    <h2 class="reveal">I can do this for you at scale, not just a demo.</h2>
+    <p class="lead reveal" style="margin:0 auto 40px">If you move fast, so do I. The work
+      is above.</p>
+    <div class="links-row reveal" style="justify-content:center">
+      <a class="link-pill" href="assets/Karol_Roszak_Resume_2026.pdf" target="_blank" rel="noopener"><b>Resume (PDF)</b><span>full history</span></a>
+      <a class="link-pill" href="mailto:lorakszak@gmail.com"><b>lorakszak@gmail.com</b><span>email</span></a>
+      <a class="link-pill" href="https://lorakszak.com" target="_blank" rel="noopener"><b>lorakszak.com</b><span>site</span></a>
+      <a class="link-pill" href="https://linkedin.com/in/lorakszak" target="_blank" rel="noopener"><b>LinkedIn</b><span>/in/lorakszak</span></a>
+      <a class="link-pill" href="https://github.com/Lorakszak" target="_blank" rel="noopener"><b>GitHub</b><span>@Lorakszak</span></a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  A 3-day generative-AI build.<br>
+  Karol Roszak &middot; 2026 &middot; Poland (CET) &middot; <a href="#top">back to top</a>
+</footer>
+
+<div class="lb" id="lb">
+  <button class="lb-x" id="lbX" aria-label="close">&times;</button>
+  <button class="lb-nav prev" id="lbPrev" aria-label="previous">&#8249;</button>
+  <img id="lbImg" alt="">
+  <button class="lb-nav next" id="lbNext" aria-label="next">&#8250;</button>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>
