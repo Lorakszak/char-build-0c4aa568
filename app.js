@@ -7,7 +7,7 @@ const GAL = TRIPTYCH.slice();
 const WF_CORE = [
   ['workflows/face_crop','Stage 1 graph: SAM3 head segmentation, 1:1 crop + coords'],
   ['workflows/face_paste','Stage 2 graph: edited face downscaled + feathered back by geometry'],
-  ['workflows/qwen_edit','Qwen Rapid AIO v23 photoreal text-edit workflow'],
+  ['workflows/seedvr_upscale','SeedVR2 2K upscaling workflow'],
   ['workflows/skin_detailer','Skin-detail pass for natural texture (anti-plastic)'],
 ];
 const WF_MORE = [
